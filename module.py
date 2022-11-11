@@ -18,8 +18,8 @@ def get_hard_attack():
 
 
 def compare_valumes(enemy_health, user_total_attack):
-    point_difference = abs(enemy_health - user_total_attack)
-    if 0 <= point_difference <= 10:
+    point_difference = enemy_health - user_total_attack
+    if point_difference <= 0:
         return True
     return False
 
@@ -36,7 +36,7 @@ def get_user_attack():
         input_attack = input('Введи тип атаки: ').lower()
         attack_value = attacks_types[input_attack]()
         print(f'Количество очков твоей атаки: {attack_value}.')
-        total += 1
+        total += attack_value
     return total
 
 
@@ -44,7 +44,13 @@ def run_game():
     user_total_attack = get_user_attack()
     enemy_health = set_enemy_health()
     print(f'Тобой нанесён урон противнику равный {user_total_attack}.')
-    print(f'Очки здоровья противника после твоей атаки: {enemy_health}.')
+    print(f'Очки здоровья противника: {enemy_health}.')
+    enemy_health_after = enemy_health - user_total_attack
+    if enemy_health_after < 0:
+        print('Очки здоровья противника после твоей атаки: 0.')
+    else:
+        print(f'Очки здоровья противника'
+              f'после твоей атаки: {enemy_health_after}.')
     if compare_valumes(enemy_health, user_total_attack):
         print('Ура! Победа за тобой!')
     else:
@@ -52,6 +58,9 @@ def run_game():
     yes_no = {
         'Y': True,
         'N': False,
+        # Новые значения словаря.
+        'y': True,
+        'n': False,
     }
     replay = input('Чтобы сыграть ещё раз, введи "y"; '
                    'если не хочешь продолжать игру, введи "n": ')
